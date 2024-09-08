@@ -21,7 +21,7 @@ export function change(amount) {
 export function firstThenLowerCase(a, p) {
   for (const item of a) {
     if (p(item)) {
-      return item.toLowerCase()
+      return item?.toLowerCase()
     }
   }
   return undefined
@@ -60,22 +60,29 @@ export function say(param) {
  * Returns the number of meaningful lines in a given file.
  */
 export async function meaningfulLineCount(filePath) {
+  let file
   try {
-    const fileHandle = await open(filePath, "r")
-    const fileContent = await fileHandle.readFile({ encoding: "utf-8" })
-    await fileHandle.close()
-
-    const lines = fileContent.split("\n")
-
-    const filteredLines = lines.filter((line) => {
+    let count = 0
+    const file = await open(filePath, "r")
+    for await (const line of file.readLines()) {
       const trimmedLine = line.trim()
-      return trimmedLine !== "" && !trimmedLine.startsWith("#")
-    })
+      if (trimmedLine !== "" && !trimmedLine.startsWith("#")) {
+        count++
+      }
+    }
 
-    return filteredLines.length
+    return count
   } catch (error) {
     console.error("Error reading file:", error)
     throw error
+  } finally {
+    if (file) {
+      try {
+        await file.close()
+      } catch (closeError) {
+        console.error("Error closing file:", closeError)
+      }
+    }
   }
 }
 
@@ -84,12 +91,22 @@ export async function meaningfulLineCount(filePath) {
  */
 export class Quaternion {
   constructor(a, b, c, d) {
-    this.a = a
-    this.b = b
-    this.c = c
-    this.d = d
-
+    Object.assign(this, { a, b, c, d })
     Object.freeze(this)
+  }
+
+  /**
+   * Returns the quaternion's conjugate.
+   */
+  get conjugate() {
+    return new Quaternion(this.a, -this.b, -this.c, -this.d)
+  }
+
+  /**
+   * Returns the quaternion's coefficients.
+   */
+  get coefficients() {
+    return [this.a, this.b, this.c, this.d]
   }
 
   /**
@@ -114,20 +131,6 @@ export class Quaternion {
       this.a * other.c - this.b * other.d + this.c * other.a + this.d * other.b,
       this.a * other.d + this.b * other.c - this.c * other.b + this.d * other.a
     )
-  }
-
-  /**
-   * Returns the quaternion's conjugate.
-   */
-  get conjugate() {
-    return new Quaternion(this.a, -this.b, -this.c, -this.d)
-  }
-
-  /**
-   * Returns the quaternion's coefficients.
-   */
-  get coefficients() {
-    return [this.a, this.b, this.c, this.d]
   }
 
   /**

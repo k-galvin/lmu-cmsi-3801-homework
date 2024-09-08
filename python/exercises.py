@@ -83,14 +83,11 @@ class Quaternion:
 
     def __mul__(self, other: 'Quaternion') -> 'Quaternion':
         '''Calculates the product of two Quaternions.'''
-        a1, b1, c1, d1 = self.a, self.b, self.c, self.d
-        a2, b2, c2, d2 = other.a, other.b, other.c, other.d
-
         return Quaternion(
-            a1 * a2 - b1 * b2 - c1 * c2 - d1 * d2,
-            a1 * b2 + b1 * a2 + c1 * d2 - d1 * c2,
-            a1 * c2 - b1 * d2 + c1 * a2 + d1 * b2,
-            a1 * d2 + b1 * c2 - c1 * b2 + d1 * a2
+            self.a * other.a - self.b * other.b - self.c * other.c - self.d * other.d,
+            self.a * other.b + self.b * other.a + self.c * other.d - self.d * other.c,
+            self.a * other.c - self.b * other.d + self.c * other.a + self.d * other.b,
+            self.a * other.d + self.b * other.c - self.c * other.b + self.d * other.a
         )
 
     def __eq__(self, other) -> bool:

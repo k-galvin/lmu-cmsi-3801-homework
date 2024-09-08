@@ -4,7 +4,7 @@
 
 ### Homework 1: Scripting
 
-In this assignment, I coded in Lua for the first time and got more practice with Python and JavaScript. This homework explored many topics including file processing, modules, and generators.
+In this assignment, I coded in Lua for the first time and got more practice with Python and JavaScript. This homework explored many topics including file processing, classes, and generators.
 
 ## Testing Instructions
 
