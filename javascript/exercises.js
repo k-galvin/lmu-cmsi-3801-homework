@@ -19,9 +19,9 @@ export function change(amount) {
  * Returns the lower case of the first string in a that satisfies predicate p.
  */
 export function firstThenLowerCase(a, p) {
-  for (let i = 0; i < a.length; i++) {
-    if (p(a[i])) {
-      return a[i]?.toLowerCase()
+  for (const item of a) {
+    if (p(item)) {
+      return item.toLowerCase()
     }
   }
   return undefined
@@ -31,12 +31,10 @@ export function firstThenLowerCase(a, p) {
  * Generator that yields successive powers of a given base up to a given limit.
  */
 export function* powersGenerator({ ofBase, upTo }) {
-  let exponent = 0
   let power = 1
   while (power <= upTo) {
     yield power
-    exponent += 1
-    power = ofBase ** exponent
+    power *= ofBase
   }
 }
 
@@ -59,7 +57,7 @@ export function say(param) {
 }
 
 /**
- * Returns the number of meaningful lines in a given file
+ * Returns the number of meaningful lines in a given file.
  */
 export async function meaningfulLineCount(filePath) {
   try {
@@ -76,13 +74,13 @@ export async function meaningfulLineCount(filePath) {
 
     return filteredLines.length
   } catch (error) {
-    console.error("Error reading file;", error)
+    console.error("Error reading file:", error)
     throw error
   }
 }
 
 /**
- * Class that build a Quaternion.
+ * Class representing a Quaternion.
  */
 export class Quaternion {
   constructor(a, b, c, d) {
@@ -119,21 +117,21 @@ export class Quaternion {
   }
 
   /**
-   * Gets the quaternion's conjugate.
+   * Returns the quaternion's conjugate.
    */
   get conjugate() {
     return new Quaternion(this.a, -this.b, -this.c, -this.d)
   }
 
   /**
-   * Gets the quaternion's coefficients.
+   * Returns the quaternion's coefficients.
    */
   get coefficients() {
     return [this.a, this.b, this.c, this.d]
   }
 
   /**
-   * Determines equivalence of two quaternions.
+   * Checks if this quaternion is equal to another quaternion or an array.
    */
   deepEqual(other) {
     if (other instanceof Quaternion) {
@@ -144,32 +142,27 @@ export class Quaternion {
         this.d === other.d
       )
     }
-    if (other.isArray()) {
-      arr = [this.a, this.b, this.c, this.d]
-      return arr.every((value, index) => value === other[index])
+
+    if (Array.isArray(other)) {
+      return [this.a, this.b, this.c, this.d].every(
+        (value, index) => value === other[index]
+      )
     }
+
     return false
   }
 
   /**
-   * Displays the quaternion as a string.
+   * Returns a string representation of the quaternion.
    */
   toString() {
-    /**
-     * Inner function to process a given coefficient for the string.
-     */
-    function processCoefficient(coefficient, letter) {
-      if (coefficient === 0) {
-        return ""
-      } else if (coefficient === 1) {
-        return letter ? `+${letter}` : `${coefficient}`
-      } else if (coefficient === -1) {
-        return letter ? `-${letter}` : `${coefficient}`
-      } else if (coefficient > 0) {
-        return `+${coefficient}${letter}`
-      } else {
-        return `${coefficient}${letter}`
-      }
+    const processCoefficient = (coefficient, letter) => {
+      if (coefficient === 0) return ""
+      if (coefficient === 1) return letter ? `+${letter}` : "1"
+      if (coefficient === -1) return letter ? `-${letter}` : "-1"
+      return coefficient > 0
+        ? `+${coefficient}${letter}`
+        : `${coefficient}${letter}`
     }
 
     const parts = [
@@ -180,10 +173,8 @@ export class Quaternion {
     ]
 
     let result = parts.join("")
-    if (result.startsWith("+")) {
-      result = result.slice(1)
-    }
+    if (result.startsWith("+")) result = result.slice(1)
 
-    return result ? result : "0"
+    return result || "0"
   }
 }
