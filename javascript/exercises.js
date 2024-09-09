@@ -30,11 +30,11 @@ export function firstThenLowerCase(a, p) {
 /**
  * Generator that yields successive powers of a given base up to a given limit.
  */
-export function* powersGenerator({ ofBase, upTo }) {
+export function* powersGenerator({ ofBase: b, upTo: limit }) {
   let power = 1
-  while (power <= upTo) {
+  while (power <= limit) {
     yield power
-    power *= ofBase
+    power *= b
   }
 }
 
