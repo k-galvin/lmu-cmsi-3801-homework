@@ -19,22 +19,18 @@ export function change(amount) {
  * Returns the lower case of the first string in a that satisfies predicate p.
  */
 export function firstThenLowerCase(a, p) {
-  for (const item of a) {
-    if (p(item)) {
-      return item?.toLowerCase()
-    }
-  }
-  return undefined
+  const string = a.find(p)
+  return string?.toLowerCase()
 }
 
 /**
  * Generator that yields successive powers of a given base up to a given limit.
  */
-export function* powersGenerator({ ofBase: b, upTo: limit }) {
+export function* powersGenerator({ ofBase: base, upTo: limit }) {
   let power = 1
   while (power <= limit) {
     yield power
-    power *= b
+    power *= base
   }
 }
 
@@ -42,17 +38,15 @@ export function* powersGenerator({ ofBase: b, upTo: limit }) {
  * Returns string of inputs seperated by spaces.
  */
 export function say(param) {
+  if (param === undefined) {
+    return ""
+  }
   const inner = (nextParam) => {
     if (nextParam === undefined) {
       return param
     }
     return say(`${param} ${nextParam}`)
   }
-
-  if (param === undefined) {
-    return ""
-  }
-
   return inner
 }
 
@@ -60,30 +54,15 @@ export function say(param) {
  * Returns the number of meaningful lines in a given file.
  */
 export async function meaningfulLineCount(filePath) {
-  let file
-  try {
-    let count = 0
-    const file = await open(filePath, "r")
-    for await (const line of file.readLines()) {
-      const trimmedLine = line.trim()
-      if (trimmedLine !== "" && !trimmedLine.startsWith("#")) {
-        count++
-      }
-    }
-
-    return count
-  } catch (error) {
-    console.error("Error reading file:", error)
-    throw error
-  } finally {
-    if (file) {
-      try {
-        await file.close()
-      } catch (closeError) {
-        console.error("Error closing file:", closeError)
-      }
+  let count = 0
+  const file = await open(filePath, "r")
+  for await (const line of file.readLines()) {
+    const trimmedLine = line.trim()
+    if (trimmedLine !== "" && !trimmedLine.startsWith("#")) {
+      count++
     }
   }
+  return count
 }
 
 /**
@@ -134,25 +113,15 @@ export class Quaternion {
   }
 
   /**
-   * Checks if this quaternion is equal to another quaternion or an array.
+   * Checks if this quaternion is equal to another quaternion.
    */
-  deepEqual(other) {
-    if (other instanceof Quaternion) {
-      return (
-        this.a === other.a &&
-        this.b === other.b &&
-        this.c === other.c &&
-        this.d === other.d
-      )
-    }
-
-    if (Array.isArray(other)) {
-      return [this.a, this.b, this.c, this.d].every(
-        (value, index) => value === other[index]
-      )
-    }
-
-    return false
+  equals(other) {
+    return (
+      this.a === other.a &&
+      this.b === other.b &&
+      this.c === other.c &&
+      this.d === other.d
+    )
   }
 
   /**
