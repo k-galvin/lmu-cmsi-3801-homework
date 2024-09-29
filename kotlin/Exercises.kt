@@ -15,61 +15,33 @@ fun change(amount: Long): Map<Int, Long> {
 }
 
 // Write your first then lower case function here
-fun firstThenLowerCase(a: List<String>, p: (String) -> Boolean): String? {
-    for (item in a) {
-        if (p(item)) {
-            return item?.lowercase()
-        }
-    }
-    return null
+fun firstThenLowerCase(strings: List<String>, predicate: (String) -> Boolean): String? {
+    return strings.firstOrNull(predicate)?.lowercase()
 }
 
 // Write your say function here
-fun say(): Exercises {
-    return Exercises("")
+fun say(phrase: String = ""): Say {
+    return Say(phrase)
 }
 
-fun say(input: String?): Exercises {
-    return Exercises(input ?: "")
-}
-
-class Exercises constructor(private val accumulatedString: String) {
-
-    fun and(word: String?): Exercises {
-        if (word == null) {
-            return Exercises(accumulatedString)
-        }
-        
-        val newAccumulatedString = "$accumulatedString $word"
-        return Exercises(newAccumulatedString)
+data class Say(val phrase: String) {
+    fun and(nextPhrase: String): Say {
+        return Say("$phrase $nextPhrase")
     }
-
-    val phrase: String
-        get() = accumulatedString
 }
 
 // Write your meaningfulLineCount function here
+@Throws(IOException::class)
 fun meaningfulLineCount(filename: String): Long {
-    return try {
-        BufferedReader(FileReader(filename)).use { reader ->
-            reader.lines()
-                .filter { line -> line.trim().isNotEmpty() && !line.trim().startsWith("#") }
-                .count()
-        }
-    } catch (e: IOException) {
-        throw IOException(e)
+    BufferedReader(FileReader(filename)).use { reader ->
+        return reader.lines()
+            .filter { line -> line.trim().isNotEmpty() && !line.trim().startsWith("#") }
+            .count()
     }
 }
 
 // Write your Quaternion data class here
-class Quaternion(val a: Double, val b: Double, val c: Double, val d: Double) {
-
-    init {
-        require(!a.isNaN() && !b.isNaN() && !c.isNaN() && !d.isNaN()) {
-            "Coefficients cannot be NaN"
-        }
-    }
-
+data class Quaternion(val a: Double, val b: Double, val c: Double, val d: Double) {
     companion object {
         val ZERO = Quaternion(0.0, 0.0, 0.0, 0.0)
         val I = Quaternion(0.0, 1.0, 0.0, 0.0)
@@ -77,22 +49,10 @@ class Quaternion(val a: Double, val b: Double, val c: Double, val d: Double) {
         val K = Quaternion(0.0, 0.0, 0.0, 1.0)
     }
 
-    fun coefficients(): List<Double> {
-        return listOf(a, b, c, d)
-    }
+    fun coefficients(): List<Double> = listOf(a, b, c, d)
 
     operator fun plus(other: Quaternion): Quaternion {
         return Quaternion(a + other.a, b + other.b, c + other.c, d + other.d)
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is Quaternion) return false
-        return a == other.a && b == other.b && c == other.c && d == other.d
-    }
-
-    override fun hashCode(): Int {
-        return listOf(a, b, c, d).hashCode()
     }
 
     operator fun times(other: Quaternion): Quaternion {
@@ -103,9 +63,7 @@ class Quaternion(val a: Double, val b: Double, val c: Double, val d: Double) {
         return Quaternion(q1, q2, q3, q4)
     }
 
-    fun conjugate(): Quaternion {
-        return Quaternion(a, -b, -c, -d)
-    }
+    fun conjugate(): Quaternion = Quaternion(a, -b, -c, -d)
 
     override fun toString(): String {
         val parts = listOf(
@@ -116,7 +74,7 @@ class Quaternion(val a: Double, val b: Double, val c: Double, val d: Double) {
         )
         val result = parts.joinToString("")
         return if (result.isNotEmpty() && result[0] == '+') {
-            result.substring(1).ifEmpty { "0" }
+            result.substring(1)
         } else {
             result.ifEmpty { "0" }
         }
@@ -138,19 +96,15 @@ sealed interface BinarySearchTree {
     fun size(): Int
     fun contains(value: String): Boolean
     fun insert(value: String): BinarySearchTree
-    override fun toString(): String
 
     object Empty : BinarySearchTree {
         override fun size(): Int = 0
-
         override fun contains(value: String): Boolean = false
-
-        override fun insert(value: String): BinarySearchTree = TreeNode(value, this, this)
-
+        override fun insert(value: String): BinarySearchTree = Node(value, Empty, Empty)
         override fun toString(): String = "()"
     }
 
-    data class TreeNode(
+    data class Node(
         private val value: String,
         private val left: BinarySearchTree,
         private val right: BinarySearchTree
@@ -158,22 +112,16 @@ sealed interface BinarySearchTree {
 
         override fun size(): Int = 1 + left.size() + right.size()
 
-        override fun contains(value: String): Boolean {
-            val compare = this.value.compareTo(value)
-            return when {
-                compare == 0 -> true
-                compare > 0 -> left.contains(value)
-                else -> right.contains(value)
-            }
+        override fun contains(value: String): Boolean =  when {
+            value < this.value -> left.contains(value)
+            value > this.value -> right.contains(value)
+            else -> true
         }
 
-        override fun insert(value: String): BinarySearchTree {
-            val cmp = this.value.compareTo(value)
-            return when {
-                cmp > 0 -> TreeNode(this.value, left.insert(value), right)
-                cmp < 0 -> TreeNode(this.value, left, right.insert(value))
-                else -> this // No duplicates allowed
-            }
+        override fun insert(value: String): BinarySearchTree = when {
+            value < this.value -> Node(this.value, left.insert(value), right)
+            value > this.value -> Node(this.value, left, right.insert(value))
+            else -> this
         }
 
         override fun toString(): String {
