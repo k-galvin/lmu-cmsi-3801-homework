@@ -34,15 +34,13 @@ func say(_ word: String = "") -> Sayer {
 
 // Write your meaningfulLineCount function here
 func meaningfulLineCount(_ filename: String) async -> Result<Int, NoSuchFileError> {
-    var lineCount = 0
     do { 
         let contents = try String(contentsOfFile: filename)
-        for line in contents.split(separator: "\n") {
-            let trimmedLine = line.trimmingCharacters(in: .whitespacesAndNewlines)
-            if !trimmedLine.isEmpty && !trimmedLine.hasPrefix("#") {
-                lineCount += 1
-            }
-        }    
+        let lineCount = contents
+            .split(separator: "\n")
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty && !$0.hasPrefix("#") }
+            .count
         return .success(lineCount)
     } catch {
         return .failure(NoSuchFileError())

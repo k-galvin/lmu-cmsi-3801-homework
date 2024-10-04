@@ -73,10 +73,10 @@ data class Quaternion(val a: Double, val b: Double, val c: Double, val d: Double
             processCoefficient(d, "k")
         )
         val result = parts.joinToString("")
-        return if (result.isNotEmpty() && result[0] == '+') {
-            result.substring(1)
-        } else {
-            result.ifEmpty { "0" }
+        return when {
+            result.isNotEmpty() && result[0] == '+' -> result.substring(1)
+            result.isEmpty() -> "0"
+            else -> result
         }
     }
 

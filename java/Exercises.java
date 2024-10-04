@@ -103,30 +103,20 @@ record Quaternion(double a, double b, double c, double d) {
         if (!result.isEmpty() && result.charAt(0) == '+') {
             result = result.substring(1);
         }
-        if (result.equals("")) {
-            return "0";
-        }
-        return result;
+        return result.isEmpty() ? "0" : result;
     }
 
     private String processCoefficient(double coefficient, String letter) {
         if (coefficient == 0) {
             return "";
-        } else if (coefficient == 1) {
-            if (letter != "") {
-                return "+" + letter;
-            }
-            return "+" + Double.toString(coefficient);
-        } else if (coefficient == -1) {
-            if (letter != "") {
-                return "-" + letter;
-            }
-            return Double.toString(coefficient);
-        } else if (coefficient > 0) {
-            return "+" + Double.toString(coefficient) + letter;
-        } else {
-            return Double.toString(coefficient) + letter;
         }
+        if (coefficient == 1) {
+            return letter.isEmpty() ? "+" + Double.toString(coefficient) : "+" + letter;
+        }
+        if (coefficient == -1) {
+            return letter.isEmpty() ? Double.toString(coefficient) : "-" + letter;
+        }
+        return coefficient > 0 ? "+" + coefficient + letter : coefficient + letter;
     }
 }
 
