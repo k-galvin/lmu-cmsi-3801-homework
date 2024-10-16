@@ -14,26 +14,21 @@ export function change(amount: bigint): Map<bigint, bigint> {
   return counts
 }
 
-// Applies a function to the first element in array that satifies predicate
-export function firstThenApply<T>(
-  array: T[],
+export function firstThenApply<T, U>(
+  items: T[],
   predicate: (item: T) => boolean,
-  funct: (item: T) => T
-): T | undefined {
-  const item = array.find(predicate)
-  return item ? funct(item) : undefined
+  consumer: (item: T) => U
+): U | undefined {
+  const item = items.find(predicate)
+  return item ? consumer(item) : undefined
 }
 
-// Infinite sequence of powers of base b
 export function* powersGenerator(base: bigint): Generator<bigint> {
-  let power: bigint = 1n
-  while (true) {
+  for (let power = 1n; ; power *= base) {
     yield power
-    power *= base
   }
 }
 
-// Number of meaningful lines in a given file
 export async function meaningfulLineCount(filePath: PathLike): Promise<number> {
   let count: number = 0
   const file = await open(filePath, "r")
@@ -46,15 +41,14 @@ export async function meaningfulLineCount(filePath: PathLike): Promise<number> {
   return count
 }
 
-// Three dimensional shape data types
-type Box = {
+interface Box {
   kind: "Box"
   width: number
   depth: number
   length: number
 }
 
-type Sphere = {
+interface Sphere {
   kind: "Sphere"
   radius: number
 }
@@ -76,9 +70,10 @@ export function surfaceArea(shape: Shape): number {
   switch (shape.kind) {
     case "Box": {
       return (
-        2 * shape.length * shape.depth +
-        2 * shape.length * shape.width +
-        2 * shape.width * shape.depth
+        2 *
+        (shape.length * shape.depth +
+          shape.length * shape.width +
+          shape.width * shape.depth)
       )
     }
     case "Sphere": {
@@ -87,16 +82,15 @@ export function surfaceArea(shape: Shape): number {
   }
 }
 
-// Binary search tree implementation
-export abstract class BinarySearchTree<T> {
-  abstract insert(value: T): BinarySearchTree<T>
-  abstract contains(value: T): boolean
-  abstract size(): number
-  abstract inorder(): Generator<T>
-  abstract toString(): string
+export interface BinarySearchTree<T> {
+  insert(value: T): BinarySearchTree<T>
+  contains(value: T): boolean
+  size(): number
+  inorder(): Generator<T>
+  toString(): string
 }
 
-export class Empty<T> extends BinarySearchTree<T> {
+export class Empty<T> implements BinarySearchTree<T> {
   insert(value: T): BinarySearchTree<T> {
     return new Node(value, new Empty<T>(), new Empty<T>())
   }
@@ -109,21 +103,21 @@ export class Empty<T> extends BinarySearchTree<T> {
     return 0
   }
 
-  *inorder(): Generator<T> {}
+  *inorder(): Generator<T> {
+    return
+  }
 
   toString(): string {
     return "()"
   }
 }
 
-class Node<T> extends BinarySearchTree<T> {
+class Node<T> implements BinarySearchTree<T> {
   constructor(
     private value: T,
     private left: BinarySearchTree<T> = new Empty<T>(),
     private right: BinarySearchTree<T> = new Empty<T>()
-  ) {
-    super()
-  }
+  ) {}
 
   insert(value: T): BinarySearchTree<T> {
     if (value < this.value) {
