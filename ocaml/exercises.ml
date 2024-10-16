@@ -12,7 +12,10 @@ let change amount =
     in
     aux amount denominations;;
 
-let first_then_apply array predicate consumer =
+let first_then_apply 
+    (array: 'a list) 
+    (predicate: 'a -> bool) 
+    (consumer: 'a -> 'b option): 'b option =
   match List.find_opt predicate array with
   | None -> None
   | Some x -> consumer x;;

@@ -48,8 +48,6 @@ describe("The change function", () => {
   })
 })
 
-// Uncomment the following tests as you complete the exercises
-
 describe("The firstThenApply function", () => {
   const nonEmpty = (s: string) => s !== ""
   const lengthGreaterThan3 = (s: string) => s.length > 3
