@@ -10,6 +10,10 @@ In this assignment, I coded in Lua for the first time and got more practice with
 
 This homework assignment allowed me to refamiliarize myself with Java and get new exposure to Swift and Kotlin. I learned about object orientation and worked with classes, structs, and enums. I learned about the pros and cons of the different languages and their similarities and differences.
 
+### Homework 3: Types
+
+In this assignment I got more experience with TypeScript and worked in Haskell and OCamel for the first time. I learned more about types by working with type inference, type variables, typeclasses, and type annotations. I also got more exposure to functional programming.
+
 ## Testing Instructions
 
 The test files are included in the repo already. They are available for YOU! They will help you not only learn the languages and concepts covered in this course, but to help you with professional practice. You should get accustomed to writing code to make tests pass. As you grow in your profession, you will get used to writing your tests early.
