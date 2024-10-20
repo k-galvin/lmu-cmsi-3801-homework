@@ -51,12 +51,12 @@ type shape =
 
 let volume s =
   match s with
-  | Sphere r -> Float.pi *. (r** 3.) *. 4. /. 3.
+  | Sphere r -> (4. /. 3.) *. Float.pi *. (r ** 3.)
   | Box (l, w, h) -> l *. w *. h;;
 
 let surface_area s =
   match s with
-  | Sphere r -> Float.pi *. (r** 2.) *. 4.
+  | Sphere r -> 4. *. Float.pi *. (r ** 2.)
   | Box (l, w, h) -> 2. *. (l *. w +. l *. h +. h *. w);;
 
 type 'a binary_search_tree =

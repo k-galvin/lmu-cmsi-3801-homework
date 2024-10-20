@@ -43,14 +43,14 @@ export async function meaningfulLineCount(filePath: PathLike): Promise<number> {
 
 interface Box {
   kind: "Box"
-  width: number
-  depth: number
-  length: number
+  readonly width: number
+  readonly depth: number
+  readonly length: number
 }
 
 interface Sphere {
   kind: "Sphere"
-  radius: number
+  readonly radius: number
 }
 
 export type Shape = Box | Sphere

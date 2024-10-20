@@ -35,18 +35,15 @@ firstThenApply :: [a] -> (a -> Bool) -> (a -> b) -> Maybe b
 firstThenApply xs pred f = f <$> find pred xs
 
 powers :: Integral a => a -> [a]
-powers base = map(base^) [0..]
+powers base = map (base^) [0..]
 
 meaningfulLineCount :: FilePath -> IO Int
 meaningfulLineCount path = do
   contents <- readFile path
   return $ length $ filter meaningfulLine $ lines contents
   where
-    meaningfulLine line = 
-      not (all isSpace line) && 
-      case dropWhile isSpace line of
-        ('#':_) -> False
-        _       -> True
+    meaningfulLine line =
+      not (all isSpace line) && not ("#" `isPrefixOf` dropWhile isSpace line)
 
 data Shape
     = Sphere Double 
@@ -87,7 +84,7 @@ contains target (Node value left right)
     | target < value  = contains target left
     | target > value  = contains target right
 
-instance (Show a) => Show (BST a) where
+instance Show a => Show (BST a) where
     show :: Show a => BST a -> String
     show Empty = "()"
     show (Node value left right) = 
