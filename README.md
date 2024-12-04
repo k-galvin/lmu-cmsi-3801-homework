@@ -14,6 +14,14 @@ This homework assignment allowed me to refamiliarize myself with Java and get ne
 
 In this assignment I got more experience with TypeScript and worked in Haskell and OCamel for the first time. I learned more about types by working with type inference, type variables, typeclasses, and type annotations. I also got more exposure to functional programming.
 
+### Homework 4:
+
+In this assignment I learned more about working in C and got my first exposure to writing C++ and Rust. I got experience with employing manual memory techniques. I became more familiar with systems programming languages.
+
+### Homework 5:
+
+In this assignment I coded in Go for the first time. I learned about basic concurrency principles and the difference between shared-memory and message-passing concurrency. 
+
 ## Testing Instructions
 
 The test files are included in the repo already. They are available for YOU! They will help you not only learn the languages and concepts covered in this course, but to help you with professional practice. You should get accustomed to writing code to make tests pass. As you grow in your profession, you will get used to writing your tests early.
